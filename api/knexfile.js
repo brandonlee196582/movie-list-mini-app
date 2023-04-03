@@ -9,7 +9,7 @@ module.exports = {
 
   development: {
     client: 'pg',
-    host: 'app-db',
+    host: 'localhost',
     connection: conString
   },
 
