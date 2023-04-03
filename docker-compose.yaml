@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  movie-app-api:
+    build: ./api
+    container_name: movie-app-api
+    ports:
+      - 3001:3001
+    networks:
+      - movie-app-net
+    environment:
+      - CON_STRING=postgres://postgres:docker@app-db-pg:5432/movie_app_db
+    depends_on:
+      - movie-app-db
+  movie-app-frontend:
+    build: ./frontend/movie-list
+    container_name: movie-app-frontend
+    ports:
+      - 3000:3000
+    networks:
+      - movie-app-net
+    depends_on:
+      - movie-app-api
+  movie-app-db:
+    image: postgres
+    container_name: movie-app-db
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+    ports:
+      - 5432:5432
+    volumes:
+      - /home/docker/volumes/postgres:/var/lib/postgresql/data
+    networks:
+      - movie-app-net
+
+networks:
+  movie-app-net:
+    driver: bridge
